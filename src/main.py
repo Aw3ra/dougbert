@@ -55,7 +55,7 @@ list_of_tweets_= open_csv(tweetsFile)
 # Add new tweets to the list of tweets
 list_of_tweets_ = generate_tweet.scrape_tweets(list_of_users, list_of_tweets_)
 # Sort the tweets by engagement rate
-# list_of_tweets_ = sorting.sort_tweets_by_engagement_rate(list_of_tweets_)
+list_of_tweets_ = sorting.sort_tweets_by_date(list_of_tweets_)
 # Write the tweets to a csv file
 tweets_to_txt(list_of_tweets_)
 
