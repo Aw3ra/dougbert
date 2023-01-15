@@ -2,6 +2,13 @@ import discord as bot
 import generate_tweet
 import random
 import csv
+import os
+from dotenv import load_dotenv
+
+# Load the environment variables
+load_dotenv()
+
+discord_token = os.getenv('DISCORD_TOKEN')
 
 file_of_tweets = 'src/data/tweets.csv'
 
@@ -75,7 +82,7 @@ def start_dougbert_bot():
             await message.channel.send(new_tweet)
     
     # Run the bot
-    client.run('MTA2MjYwODgzMzIxOTkxOTkwMg.GRHDjp.NUqT4NaCBkMd9GA1hEvU0B0dZL6JHAV_z00ch4')
+    client.run(discord_token)
 
 
 # Function for returning a random tweet from the csv file
