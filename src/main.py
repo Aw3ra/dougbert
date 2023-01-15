@@ -5,6 +5,8 @@ import discord_stuff
 import datetime
 
 
+tweetsFile = 'src/data/tweets.csv'
+
 # List of users to look at
 list_of_users = ['litecoinyagami','dsentralized','solporttom','notbunjil','aeyakovenko','0xmert_','htmleverything','thejackforge','rick_harris','jaakonfa']
 
@@ -13,7 +15,7 @@ list_of_users = ['litecoinyagami','dsentralized','solporttom','notbunjil','aeyak
 # Outputs: None
 def tweets_to_txt(list_of_tweets):
     # Open the csv file and write the tweets to it
-    with open('data/tweets.csv', 'w', encoding = 'utf-8', newline='') as file:
+    with open(tweetsFile, 'w', encoding = 'utf-8', newline='') as file:
         # Write the header
         writer = csv.writer(file)
         # Write the tweets
@@ -48,12 +50,12 @@ def open_csv(csv_name):
 
 
 # Open up csv and flood it with tweets
-list_of_tweets_= open_csv('data/tweets.csv')
+list_of_tweets_= open_csv(tweetsFile)
 
 # Add new tweets to the list of tweets
 list_of_tweets_ = generate_tweet.scrape_tweets(list_of_users, list_of_tweets_)
 # Sort the tweets by engagement rate
-list_of_tweets_ = sorting.sort_tweets_by_engagement_rate(list_of_tweets_)
+# list_of_tweets_ = sorting.sort_tweets_by_engagement_rate(list_of_tweets_)
 # Write the tweets to a csv file
 tweets_to_txt(list_of_tweets_)
 
@@ -61,7 +63,7 @@ tweets_to_txt(list_of_tweets_)
 final_list = []
 
 # Get the most common topics
-common_words = sorting.get_most_common_topic('data/tweets.csv', 10, 10)
+common_words = sorting.get_most_common_topic(tweetsFile, 10, 10)
 # For each tweet in the list of tweets
 for tweet in list_of_tweets_:
     # For each word in the list of common words

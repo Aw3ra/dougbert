@@ -3,7 +3,7 @@ import generate_tweet
 import random
 import csv
 
-file_of_tweets = 'data/tweets.csv'
+file_of_tweets = 'src/data/tweets.csv'
 
 # Create the discord client 
 intents = bot.Intents.all()
