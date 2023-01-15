@@ -8,7 +8,7 @@ import datetime
 tweetsFile = 'src/data/tweets.csv'
 
 # List of users to look at
-list_of_users = ['litecoinyagami','dsentralized','solporttom','notbunjil','aeyakovenko','0xmert_','htmleverything','thejackforge','rick_harris','jaakonfa']
+list_of_users = ['litecoinyagami','dsentralized','solporttom','notbunjil','aeyakovenko','0xmert_','htmleverything','thejackforge','rick_harris','jaakonfa', 'leveraged_labs', 'theonlynom']
 
 # Function to write tweets to a csv file
 # Inputs:  list_of_tweets - a list of tweets
