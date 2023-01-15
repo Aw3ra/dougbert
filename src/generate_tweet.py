@@ -11,8 +11,11 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 
 # Section for personalities, looking to make this adjustable using the discord bot
 personality = 'Reword this to be more easily understood:\n\n'
-doug = "In 270 characters or less reword this as if you were a country bumpkin, make it original:\n\n"
-bert = "In 270 characters or less Reword this as if you were a snobby city lover, make it original:\n\n"
+doug = "Create an extended version of this as if you were a country bumpkin, make it original:\n\n"
+bert = "Using a minimum of 1000 characters and full sentences reword this as if you were a snobby city lover, make it original:\n\n"
+
+# List of items to cause tweet to be false
+list_of_invalid_tweets = []
 
 # Function to scrape tweets from a list of users
 # Inputs:  list_of_users - a list of users
@@ -70,14 +73,48 @@ def get_response(tweet, aiName):
         prompt = bert+tweet
 
     # Send the prompt to the AI
-    response = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=prompt,
-        temperature=0,
-        max_tokens=60,
-        top_p=1.0,
-        frequency_penalty=0.0,
-        presence_penalty=0.0
-    )
+    valid_tweet = False
+    while valid_tweet == False:
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=prompt,
+            temperature=0,
+            max_tokens=100,
+            top_p=1.0,
+            frequency_penalty=0.0,
+            presence_penalty=0.0
+        )
+        tweet = response['choices'][0]['text']
+        # Get the response
+        valid_tweet = check_tweet(tweet)
+    tweet = split_tweet_for_thread(tweet)
+
+
     # Return the response
-    return response['choices'][0]['text']
+    return tweet 
+
+# Function for checking if the tweet is valid, and if not run again
+# Input: The tweet
+# Output: True if the tweet is valid, False if the tweet is not valid
+def check_tweet(tweet):
+    if 'http' in tweet:
+        return False
+
+def split_tweet_for_thread(string):
+    limit = 270
+    start = 0
+    parts = []
+    print(len(string))
+    while start < len(string):
+        period_index = string[start:start+limit].rfind(".")
+        if period_index != -1:
+            first_part = string[start:start+period_index+1]
+            parts.append(first_part)
+            start = start + period_index+1
+        else:
+            first_part = string[start:start+limit]
+            parts.append(first_part)
+            start = start + limit
+
+    parts.append(string[start:])
+    return parts
