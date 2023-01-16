@@ -34,7 +34,6 @@ def start_dougbert_bot():
             return
         new_tweet = messaging_logic(message)
         
-
         # Send the tweet to the discord channel
         await message.channel.send(new_tweet)
     

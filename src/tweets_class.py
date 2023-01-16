@@ -1,18 +1,5 @@
-import tweepy
-import os
-from dotenv import load_dotenv
-
-# Load the environment variables
-load_dotenv()
-
-# Create a tweepy client with the bearer token to pull tweets
-bearer_token = os.getenv('BEARER_TOKEN')
-client = tweepy.Client(bearer_token)
-
 # Class
 # This class is used to store tweets and their respective variables
-# It also contains functions to get the engagement rate of a tweet
-# and to print the tweet
 class tweets:
     # Constructor, initalise the variables
     def __init__(self, tweet, user):
