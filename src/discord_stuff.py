@@ -61,6 +61,7 @@ def random_tweet(file_name):
 # Function for deciding which tweet to generate based on the message
 # Input: The message
 # Output: The tweet to generate
+# TODO: Add more function calls for adding personality or more custom tweets
 def messaging_logic(message):
     # If the message starts with !tweet
     if message.content.startswith('!tweet'):
@@ -106,7 +107,6 @@ def messaging_logic(message):
                 # Generate a tweet based on the random tweet and the ai
                 new_tweet = generate_tweet.get_response(tweet, ai)
         # Replace any new lines with a space and replace any full stops with a space, could use this to seperated by thread as well
-        print(new_tweet)
         tweet = ''
         for sentence in new_tweet:
             sentence.replace('\n', ' ')

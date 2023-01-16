@@ -24,16 +24,10 @@ class tweets:
         except:
             self.text = tweet.replace('\n', ' ')
         self.user = user 
-        self.engagement_rate = 0
+        self.engagement_rate = ''
         self.tweet = tweet
-        self.created_at = 0
-    
-    # Get the engagement rate of the tweet
-    def get_engagement_rate(self):
-        # For each metric in the public metrics of the tweet, if it is a retweet, reply, like or quote, add it to the engagement rate
-        for metric in self.tweet.public_metrics.items():
-            if metric[0] == 'retweet_count' or metric[0] == 'reply_count' or metric[0] == 'like_count' or metric[0] == 'quote_count':
-                self.engagement_rate += metric[1]
+        self.created_at = ''
+
     
     # Print the tweet
     def print_tweet(self):
