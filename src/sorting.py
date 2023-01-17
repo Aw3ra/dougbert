@@ -5,13 +5,14 @@ from nltk.tokenize import word_tokenize
 import gensim
 from gensim import corpora
 from collections import defaultdict
-
+import datetime
+import csv
 
 # List of words to ignore when looking at the most common words
 word_to_ignore = ['get', 'even', 'like', 'im', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '’', '“', '”', '’', 'know', 'one', 'two', 'three', 'four', 'five',
                   'six', 'seven', 'eight', 'nine', 'ten', 'amp', 'Taiyo', 'taiyopilots', 'pilots', 'see', 'lot', 'still', 'new', 'would', 'want', 'dont', 'don’t', 'LamportDAO']
 
-# List of topics to ignore
+# List of topics to ignore when choosing a tweet
 ignored_topics = ['taiyopilots', 'TaiyoPilots', 'LamportDAO', 'Graphite']
 
 # Function for sorting tweets by engagment rate
@@ -102,3 +103,47 @@ def get_most_common_topic(file_path, num_topics, num_words):
     # Get the words in the most common topic
     words = ladmodel.show_topic(most_common_topic)
     return words
+
+
+
+def filter_tweets(tweetsFile):
+    # Create a final list of tweets
+    list_of_tweets_ = open_csv(tweetsFile)
+    final_list = []
+    # Get the most common topics
+    common_words = get_most_common_topic(tweetsFile, 10, 10)
+    # For each tweet in the list of tweets
+    for tweet in list_of_tweets_:
+        # For each word in the list of common words
+        for words in common_words:
+            # If the word is in the tweet, add the tweet to the final list
+            if words[0] in tweet.text:
+                # Add the tweet to the final list
+                final_list.append(tweet)
+                break
+    # Remove the ignored topics
+    final_list = remove_ignored_topics(final_list, ignored_topics)
+    return final_list
+
+# Function to open the csv file
+# Inputs:  csv_name - the name of the csv file
+# Outputs: list_of_tweets_ - a list of tweets
+def open_csv(csv_name):
+    # Open the csv file
+    with open(csv_name, 'r', encoding = 'utf-8') as file:
+        # Create a first 'dummy' tweet
+        firstTweet = [00000,'This is a fake tweet',30, datetime.datetime(2020, 1, 1, 0, 0), 'bullish']
+        # Create a list of tweets
+        list_of_tweets_ = []
+        # Add the first tweet to the list of tweets
+        list_of_tweets_.append(firstTweet)
+        # Create a csv reader
+        reader = csv.reader(file)
+        # Skip the header
+        next(reader)
+        # For each row in the csv file
+        for row in reader:
+            # Add the row to the list of tweets
+            list_of_tweets_.append(row)
+    # Return the list of tweets
+    return list_of_tweets_
