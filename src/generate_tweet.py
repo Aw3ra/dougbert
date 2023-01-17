@@ -32,7 +32,6 @@ def scrape_tweets(list_of_users, list_of_tweets_):
     # Get the IDs of the users
     for users in list_of_users:
         user = client.get_user(username=users)
-
         # fetching the ID
         for each in user.data:
             if each == 'id':
@@ -52,8 +51,6 @@ def scrape_tweets(list_of_users, list_of_tweets_):
         thisTweet.sentiment = each[4]
         # Add the tweet to the list of tweets
         list_of_new_tweets_.append(thisTweet)
-
-
     # Get tweets from users
     for user in list_of_ids:
         done = False
@@ -79,9 +76,6 @@ def scrape_tweets(list_of_users, list_of_tweets_):
                 thisTweet.created_at = date
                 # Add the tweet to the list of tweets
                 list_of_new_tweets_.append(thisTweet)
-    
-    for each in list_of_new_tweets_:
-        print(each.engagement_rate)
     # For each tweet in the list of tweets
     for tweet in list_of_new_tweets_:
         if tweet.sentiment == '':
@@ -127,10 +121,6 @@ def get_sentiment(tweet):
     sentiment = response['choices'][0]['text']
     # Return the sentiment
     return sentiment
-
-
-
-
 
 
 # Function to generate a tweet
