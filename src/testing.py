@@ -28,9 +28,4 @@ def open_csv(csv_name):
     # Return the list of tweets
     return list_of_tweets_
 
-list_of_tweets = open_csv('src/data/tweets.csv')
-
-
-for tweet in list_of_tweets:
-    response = generate_tweet.get_sentiment(tweet[1])
-    print(response)
+generate_tweet.post_tweet(test_tweet)
