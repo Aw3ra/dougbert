@@ -7,6 +7,7 @@ from gensim import corpora
 from collections import defaultdict
 import datetime
 import csv
+import tweets_class
 
 # List of words to ignore when looking at the most common words
 word_to_ignore = ['get', 'even', 'like', 'im', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '’', '“', '”', '’', 'know', 'one', 'two', 'three', 'four', 'five',
@@ -105,7 +106,9 @@ def get_most_common_topic(file_path, num_topics, num_words):
     return words
 
 
-
+# Function for filtering tweets
+# Inputs:  tweetsFile - the path to the csv file
+# Outputs: final_list - a list of tweets
 def filter_tweets(tweetsFile):
     # Create a final list of tweets
     list_of_tweets_ = open_csv(tweetsFile)
@@ -145,5 +148,18 @@ def open_csv(csv_name):
         for row in reader:
             # Add the row to the list of tweets
             list_of_tweets_.append(row)
+    list_of_new_tweets_ = []
+    # Turn the list of current tweets into tweet objects
+    for each in list_of_tweets_:
+        # Create a tweet object
+        thisTweet = tweets_class.tweets(each[1], each[0])
+        # Add the engagement rate to the tweet
+        thisTweet.engagement_rate = each[2]
+        # Add the date to the tweet
+        thisTweet.created_at = each[3]
+        # Add the tweet sentiment
+        thisTweet.sentiment = each[4]
+        # Add the tweet to the list of tweets
+        list_of_new_tweets_.append(thisTweet)
     # Return the list of tweets
-    return list_of_tweets_
+    return list_of_new_tweets_

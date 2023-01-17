@@ -4,6 +4,7 @@ import random
 import csv
 import os
 from dotenv import load_dotenv
+import sorting
 
 # Load the environment variables
 load_dotenv()
@@ -29,14 +30,25 @@ def start_dougbert_bot():
     # When a message is sent to the discord channel
     @client.event
     async def on_message(message):
-        # If the message is from the bot itself, ignore it
+        # If the message is from the bot itself, create a global variable for the last message and return
         if message.author == client.user:
+            global last_message
+            last_message = message
             return
-        new_tweet = messaging_logic(message)
-        
-        # Send the tweet to the discord channel
-        await message.channel.send(new_tweet)
-    
+        else:
+            new_tweet = messaging_logic(message)
+            if new_tweet == None:
+                return
+            # Send the tweet to the discord channel
+            await message.channel.send(new_tweet)
+   
+    @client.event
+    async def on_raw_reaction_add(payload):
+        if payload.user_id != client.user.id:
+            if payload.message_id == last_message.id:
+                emoji = str(payload.emoji)
+                if emoji == '✅':
+                    generate_tweet.post_tweet(last_message.content)
     # Run the bot
     client.run(discord_token)
 
@@ -44,17 +56,8 @@ def start_dougbert_bot():
 # Function for returning a random tweet from the csv file
 # Output: A random tweet
 def random_tweet(file_name):
-    # Open the csv file and get a random tweet
-    with open (file_name, 'r', encoding = 'utf-8') as file:
-        # Skip the first row as it is the header
-        reader = csv.reader(file)
-        next(reader)
-        # Add each tweet to a list
-        list_of_tweets = []
-        for row in reader:
-            list_of_tweets.append(row[1])
-        # Return a random tweet
-        return random.choice(list_of_tweets)
+    list_of_tweets = sorting.filter_tweets(file_name)
+    return random.choice(list_of_tweets).text
 
 
 # Function for deciding which tweet to generate based on the message
@@ -113,4 +116,3 @@ def messaging_logic(message):
             tweet = tweet + sentence + ' '
         # Return the new tweet
         return tweet
-

@@ -2,7 +2,9 @@ import sorting
 import csv
 import generate_tweet
 import discord_stuff
-import datetime
+import schedule
+import time
+import threading
 
 
 tweetsFile = 'src/data/tweets.csv'
@@ -25,9 +27,15 @@ def tweets_to_txt(list_of_tweets):
             # Write the tweet to the csv file
             writer.writerow([tweet.user, tweet.text, tweet.engagement_rate, tweet.created_at, tweet.sentiment])
 
-
-# TODO: Do this every hour
+# Function to refresh the tweets
+# Opens up the csv file
+# Scrapes new tweets
+# Sorts the tweets by engagement rate
+# Writes the tweets to a csv file
+# Inputs:  None
+# Outputs: None
 def refresh_tweets():
+    print('Refreshing tweets....')
     # Open up csv and flood it with tweets
     list_of_tweets_= sorting.open_csv(tweetsFile)
     # Add new tweets to the list of tweets
@@ -37,10 +45,24 @@ def refresh_tweets():
     # Write the tweets to a csv file
     tweets_to_txt(list_of_tweets_)
 
-refresh_tweets()
 
-# Start the discord bot
-discord_stuff.start_dougbert_bot()
+# Main function
+# Starts the discord bot
+# Runs the tweet scraper every hour
+# Inputs:  None
+# Outputs: None
+def main():
+    print('Starting Dougbert Bot....')
+    discord_stuff.start_dougbert_bot()
+    threading.Thread(target=discord_stuff.start_dougbert_bot).start()
+    print('Starting Tweet Scraper....')
+    schedule.every(1).hour.do(refresh_tweets)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+
+main()
 
 
     

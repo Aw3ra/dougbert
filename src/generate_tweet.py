@@ -23,7 +23,6 @@ list_of_invalid_tweets = []
 #          list_of_tweets_ - a list of tweets
 # Outputs: list_of_tweets_ - a list of tweets
 # TODO: Add error handling 
-# TODO: Add sentiment analysis, might be better in the tweet_class though
 def scrape_tweets(list_of_users, list_of_tweets_):
     # Create a client
     client = tweepy.Client(os.getenv('TWITTER_BEARER_TOKEN'))
@@ -89,7 +88,9 @@ def scrape_tweets(list_of_users, list_of_tweets_):
     return list_of_new_tweets_
 
 
-    # Get the engagement rate of the tweet
+# Get the engagement rate of the tweet
+# Inputs:  tweet - the tweet to be analysed
+# Outputs: engagement_rate - the engagement rate of the tweet
 def get_engagement_rate(tweet):
     # Set the engagement rate to 0
     engagement_rate = 0
@@ -170,6 +171,7 @@ def check_tweet(tweet):
 # Input: The tweet
 # Output: A list of tweets
 def split_tweet_for_thread(string):
+
     # Set the split limit
     limit = 270
     # Set the start
@@ -199,3 +201,18 @@ def split_tweet_for_thread(string):
     parts.append(string[start:])
     # Return the list of parts
     return parts
+
+
+# Function for posting a tweet
+# Inputs:  tweet - the tweet to be posted
+#          client - the client to post the tweet
+# Outputs: None
+def post_tweet(tweet):
+# Authenticate to Twitter
+    client = tweepy.Client(
+    consumer_key=os.getenv('CONSUMER_KEY'), consumer_secret=os.getenv('CONSUMER_SECRET'),
+    access_token=os.getenv('ACCESS_TOKEN') , access_token_secret=os.getenv('ACCESS_TOKEN_SECRET'))
+
+    # Post the tweet
+    response = client.create_tweet(text=tweet)
+
