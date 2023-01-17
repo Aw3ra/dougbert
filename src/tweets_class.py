@@ -14,6 +14,7 @@ class tweets:
         self.engagement_rate = ''
         self.tweet = tweet
         self.created_at = ''
+        self.sentiment = ''
 
     
     # Print the tweet

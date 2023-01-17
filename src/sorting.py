@@ -19,7 +19,7 @@ ignored_topics = ['taiyopilots', 'TaiyoPilots', 'LamportDAO', 'Graphite']
 # Outputs: list_of_tweets - a list of tweets sorted by engagement rate
 def sort_tweets_by_engagement_rate(list_of_tweets):
     # Sort the tweets by engagement rate
-    list_of_tweets.sort(key=lambda x: x.engagement_rate, reverse=True)
+    list_of_tweets.sort(key=lambda x: int(x.engagement_rate), reverse=True)
     # Return the list of tweets
     return list_of_tweets
 
