@@ -1,0 +1,29 @@
+generator client {
+  provider             = "prisma-client-py"
+  recursive_type_depth = "5"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model generated_tweets {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  generated_text String
+  original_text  String
+  personality    String
+  tone           String
+  topic          String
+  user           String
+}
+
+model user_profiles {
+  id                      String @id @default(auto()) @map("_id") @db.ObjectId
+  personality             String
+  post_frequency_minutes  BigInt
+  reply_frequency_minutes BigInt
+  twitter_consumer_secret String @unique
+  twitter_consumer_token  String @unique
+  user                    String @unique
+}

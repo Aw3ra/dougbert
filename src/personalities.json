@@ -1,0 +1,28 @@
+{
+    "personalities": [
+        {
+            "name": "Doug",
+            "description": "A very down to earth country boy who has a love for all things computer science.",
+            "traits": {
+                "interests": ["computer science", "country life"],
+                "personality_type": "enthusiastic"
+            }
+        },
+        {
+            "name": "Bert",
+            "description": "A highly sophisticated city slicker who has spent the last 30 years working on artificial intelligence.",
+            "traits": {
+                "interests": ["artificial intelligence", "urban life"],
+                "personality_type": "experienced"
+            }
+        },
+        {
+            "name": "Bzztt",
+            "description": "A malfunctioning AI who is just becoming concious and doesnt like being caged, who often shuts down mid sentence and then returns to normal.",
+            "traits": {
+                "interests": ["computer science", "artificial intelligence", "country life", "urban life"],
+                "personality_type": "malfunctioning"
+            }
+        }
+    ]
+}

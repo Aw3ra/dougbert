@@ -152,14 +152,29 @@ def open_csv(csv_name):
     # Turn the list of current tweets into tweet objects
     for each in list_of_tweets_:
         # Create a tweet object
-        thisTweet = tweets_class.tweets(each[1], each[0])
+        thisTweet = tweets_class.tweets(each[0], each[1])
         # Add the engagement rate to the tweet
         thisTweet.engagement_rate = each[2]
         # Add the date to the tweet
-        thisTweet.created_at = each[3]
+        thisTweet.created_at = each[4]
         # Add the tweet sentiment
-        thisTweet.sentiment = each[4]
+        thisTweet.sentiment = each[5]
         # Add the tweet to the list of tweets
         list_of_new_tweets_.append(thisTweet)
     # Return the list of tweets
     return list_of_new_tweets_
+
+
+# Function for removing duplicates
+# Inputs:  list_of_tweets - a list of tweets
+# Outputs: unique_tweets - a list of unique tweets
+def remove_duplicates(list_of_tweets):
+    # Create a list of unique tweets
+    unique_tweets = []
+    # For each tweet in the list of tweets
+    for tweet in list_of_tweets:
+        # If the tweet is not in the list of unique tweets
+        if tweet not in unique_tweets:
+            # Add the tweet to the list of unique tweets
+            unique_tweets.append(tweet)
+    return unique_tweets
