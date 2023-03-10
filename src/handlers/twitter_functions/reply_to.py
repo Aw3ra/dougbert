@@ -26,11 +26,9 @@ import re
 #          e - if an error occurs
 # ---------------------------------------------------------------------------------#
 def reply_to(auth,auth2,**kwargs):
-    json_data = find_json.find_json_file('prompts.json')[0]['reply_to_tweets']
-    # Get the sentiment prompt
-    sentiment_prompt = json_data['sentiment']
+    json_data = find_json.find_json_file('prompts.json')[0][kwargs['rule']]
     # Get the reply prompt
-    reply_prompt = json_data['reply']
+    reply_prompt = json_data['prompt']
     # If the tweet_ID is passed in
     if 'tweet_ID' in kwargs:
         # Get the tweet_id as a number 

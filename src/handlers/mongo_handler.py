@@ -22,7 +22,7 @@ except:
 def decide_action(action, **kwargs):
     # Create the database connection
     myclient = pymongo.MongoClient(dbURL)
-    myDB = myclient["dashboard"]
+    myDB = myclient["Twitter"]
 
     # Call the appropriate function
     # If the action is add, call the add_to_db function

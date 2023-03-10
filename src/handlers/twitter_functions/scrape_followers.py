@@ -18,22 +18,17 @@ def scrape_following(auth, following, database):
             # Create an array of user dictionaries
             new_user_array = []
             for users in following.data:
-                # Get the user ID
-                user = auth.get_user(username=users)
-
-                ID = user.data['id']
-                user_name = user.data['username']
-                # Add the user to an array of user dictionaries
-                new_user = {'user': user_name, 'user_id': ID, 'followers': 0,}
+                new_user = {'user': users.data['username'], 'user_id': int(users.data['id']), 'followers': 0,}
                 # If the user is unique
                 if is_unique(new_user, all_users):
                     # Add the user to the array of new users
                     new_user_array.append(new_user)
             # If there are new users
+            print(len(new_user_array))
             if len(new_user_array) > 0:
                 # Add the new users to the database
                 for users in new_user_array:
-                    mongo_handler.decide_action('add', collection=database, query=users)
+                    print(mongo_handler.decide_action('add', collection=database, query=users))
             # Function here for updating the amount of followers each user has
             # TODO - Add function here
                 return True

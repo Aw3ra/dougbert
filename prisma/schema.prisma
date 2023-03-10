@@ -9,21 +9,40 @@ datasource db {
 }
 
 model generated_tweets {
-  id             String @id @default(auto()) @map("_id") @db.ObjectId
-  generated_text String
-  original_text  String
-  personality    String
-  tone           String
-  topic          String
-  user           String
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  aiName         String
+  altered_tweet  String
+  approved       Boolean?
+  original_tweet String
+  used           Boolean
 }
 
-model user_profiles {
-  id                      String @id @default(auto()) @map("_id") @db.ObjectId
-  personality             String
-  post_frequency_minutes  BigInt
-  reply_frequency_minutes BigInt
-  twitter_consumer_secret String @unique
-  twitter_consumer_token  String @unique
-  user                    String @unique
+model replied_tweets {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  Tweet_id   BigInt
+  replied_to Boolean
+  tweet_text String
+}
+
+model scraped_tweets {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  created_at      DateTime @db.Date
+  engagement_rate Int
+  sentiment       String?
+  text            String
+  /// Multiple data types found: Int: 13.3%, BigInt: 86.7% out of 1000 sampled entries
+  user_id         Json
+  user_name       String
+}
+
+model scraped_users {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  followers Int
+  user      String
+  user_id   BigInt
+}
+
+model users {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  user String
 }

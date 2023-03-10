@@ -1,15 +1,11 @@
-import discord_stuff
-import generate_tweet
 import datetime
 import csv
-import tweets_class
-import read_write
 import os
 import tweepy
 import asyncio
 from dotenv import load_dotenv
 from notion.client import NotionClient
-from handlers import openAI_handler, mongo_handler, twitter_handler, discord_handler
+from handlers import openAI_handler, mongo_handler, twitter_handler
 from handlers.twitter_functions import twitter_stream, post_tweet
 from handlers.mongo_functions import add_via_prisma
 from general_functions import find_json
@@ -26,21 +22,4 @@ command_list = ['add single user',
                 'remove multiple documents',
                 'none']
 
-prompt = twitter_handler.decide_action('full_conversation', tweet_id = 1629359835215982592, bot_name = 'dougbertAI')
-# reply = openA
-
-# Uses AI to write a tweet
-tones = ['bullish', 'bearish', 'neutral', 'hyperetoic', 'hypoetoic', 'random', 'sad']
-for tone in tones:
-    prompt = [{'role': 'user', 'content': f'Write me a {tone} tweet about solana'}]
-    prompt = openAI_handler.decide_action('text', prompt=prompt).replace('\n','')
-    data = {
-                "user": 'dougbertAI',
-                'topic': 'solana',
-                'tone': tone,
-                "personality": tone,
-                "original_text": f'Write me a {tone} tweet about solana',
-                "generated_text": prompt
-            }
-    print(asyncio.run(add_via_prisma.add_via_prisma('generated_tweets', data)))
-    time.sleep(5)
+twitter_handler.start_stream()

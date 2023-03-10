@@ -28,7 +28,7 @@ fall_back_client = tweepy.Client(MY_BEARER_TOKEN)
 # streamingClient = tweepy.StreamingClient(MY_BEARER_TOKEN)
 # streamingClient.sample()
 # ---------------------------------------------------------------------------------#
-class IDPrinter(tweepy.StreamingClient):
+class DBStreaming(tweepy.StreamingClient):
     # -----------------------------------------------------------------------------#
     # Function to do something on stream connect
     # Input: None
@@ -66,15 +66,20 @@ class IDPrinter(tweepy.StreamingClient):
 
 
     # -----------------------------------------------------------------------------#
-    # FUnction to add rules to the stream from a json file
+    # Function to add rules to the stream from a json file
     # Input: None
     # Output: None
     # -----------------------------------------------------------------------------#
-    def add_rules(self):
+    def add_written_rules(self):
         # Get rules from json file
-        rules = find_json.find_json_file('rules.json')
-        # Add rules to the stream
-        self.add_rules(rules)
+        rules = find_json.find_json_file('prompts.json')
+        # For each in rules
+        for set in rules:
+            for rule in set.keys():
+                # Add the rule to the stream
+                rule = tweepy.StreamRule(rule)
+                print(rule)
+                self.add_rules(rule)
     # -----------------------------------------------------------------------------#
 
 
@@ -83,11 +88,15 @@ class IDPrinter(tweepy.StreamingClient):
     # Input: None
     # Output: None
     # -----------------------------------------------------------------------------#
-    def delete_rules(self):
+    def delete_written_rules(self):
         # Get rules from the stream
         rules = self.get_rules()
-        # Delete rules from the stream
-        self.delete_rules(rules)
+        # Check if rules has data
+        if rules.data:
+            for rule in rules.data:
+                self.delete_rules(rule)
+        else:
+            print("No rules to delete")
     # -----------------------------------------------------------------------------#
 
     
@@ -97,15 +106,20 @@ class IDPrinter(tweepy.StreamingClient):
     # Output: None
     # -----------------------------------------------------------------------------#
     def on_tweet(self, tweet):
-        # If the tweet has been responded to, don't respond again
-        print(tweet.text)
-        # If the tweet is not a retweet
+        # Check the user tages against prompts.json
+        user_tags_rules = find_json.find_json_file('prompts.json')
+        # For each rule in user_tags_rules
+        for rule in user_tags_rules:
+            for user in rule.keys():
+                if tweet.entities['mentions'][0]['username'] == user: 
+                    if str(tweet.text[0:2]) != 'RT':
+                    # If the tweet has not been responded to
+                        if str(tweet.id) not in mongo_handler.decide_action('find', collection='responded_to', query={'Tweet_id': int(tweet.id)}):
+                            # Reply to the tweet
+                            print(twitter_handler.decide_action('reply_to_tweet', tweet_ID=str(tweet.id), rule=user))
 
-        if str(tweet.text[0:2]) != 'RT':
-            # If the tweet has not been responded to
-            if str(tweet.id) not in mongo_handler.decide_action('find', collection='responded_to', query={'Tweet_id': int(tweet.id)}):
-                # Reply to the tweet
-                print(twitter_handler.decide_action('reply_to_tweet', tweet_ID=str(tweet.id)))
+        # # If the tweet is not a retweet
+
     # -----------------------------------------------------------------------------#
 
 # ---------------------------------------------------------------------------------#
@@ -119,9 +133,13 @@ class IDPrinter(tweepy.StreamingClient):
 # ---------------------------------------------------------------------------------#
 def start_streaming(token):
     # Create a new instance of the IDPrinter class
-    printer = IDPrinter(token)
+    current_stream = DBStreaming(token)
+    # Delete all rules from the stream
+    current_stream.delete_written_rules()
     # Add rules to the stream
-    printer.filter()
+    current_stream.add_written_rules()
+    # Start the stream
+    current_stream.filter(expansions='entities.mentions.username')
 # ---------------------------------------------------------------------------------#
 
 def stop_streaming():

@@ -70,7 +70,7 @@ def decide_action(action, **kwargs):
         try:
             # Find the bot id
             bot_id = normal_client.get_user(username=kwargs['bot_name']).data['id']
-            following = normal_client.get_users_following(bot_id, max_results=1000)
+            following = fall_back_client.get_users_following(bot_id, max_results=1000)
         except: 
             # Find the bot id
             bot_id = fall_back_client.get_user(username=kwargs['bot_name']).data['id']
