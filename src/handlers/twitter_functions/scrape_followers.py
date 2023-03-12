@@ -24,11 +24,11 @@ def scrape_following(auth, following, database):
                     # Add the user to the array of new users
                     new_user_array.append(new_user)
             # If there are new users
-            print(len(new_user_array))
             if len(new_user_array) > 0:
                 # Add the new users to the database
                 for users in new_user_array:
-                    print(mongo_handler.decide_action('add', collection=database, query=users))
+                    if mongo_handler.decide_action('add', collection=database, query=users):
+                        print('Added user: ' + users['user'])
             # Function here for updating the amount of followers each user has
             # TODO - Add function here
                 return True

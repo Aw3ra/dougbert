@@ -36,10 +36,10 @@ def decide_action(action, **kwargs):
     # Authenticate to Twitter using the keys for the twitter bot account
     # -----------------------------------------------------------------------------#
     db_client = tweepy.Client(
-        consumer_key=os.getenv('DOUGBERT_CONSUMER_KEY'), 
-        consumer_secret=os.getenv('DOUGBERT_CONSUMER_SECRET'),
-        access_token=os.getenv('DOUGBERT_ACCESS_TOKEN') , 
-        access_token_secret=os.getenv('DOUGBERT_ACCESS_TOKEN_SECRET'))
+        consumer_key=CONSUMER_KEY, 
+        consumer_secret=CONSUMER_SECRET,
+        access_token=ACCESS_TOKEN , 
+        access_token_secret= ACCESS_TOKEN_SECRET)
     # -----------------------------------------------------------------------------#
 
     #------------------------------------------------------------------------------#

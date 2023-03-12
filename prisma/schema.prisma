@@ -30,8 +30,7 @@ model scraped_tweets {
   engagement_rate Int
   sentiment       String?
   text            String
-  /// Multiple data types found: Int: 13.3%, BigInt: 86.7% out of 1000 sampled entries
-  user_id         Json
+  user_id         BigInt
   user_name       String
 }
 
@@ -39,10 +38,7 @@ model scraped_users {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   followers Int
   user      String
-  user_id   BigInt
-}
-
-model users {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  user String
+  user_id   BigInt @unique
+  rating    Int
+  last_conversation_topic String
 }

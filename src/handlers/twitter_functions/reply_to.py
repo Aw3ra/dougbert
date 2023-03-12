@@ -26,7 +26,12 @@ import re
 #          e - if an error occurs
 # ---------------------------------------------------------------------------------#
 def reply_to(auth,auth2,**kwargs):
-    json_data = find_json.find_json_file('prompts.json')[0][kwargs['rule']]
+    # If there is a rule in kwargs, set the json_data to the rule
+    if 'rule' in kwargs:
+        json_data = find_json.find_json_file('prompts.json')[0][kwargs['rule']]
+    # If there is no rule in kwargs, set the json_data to the default
+    else:
+        json_data = find_json.find_json_file('prompts.json')[0]['Default']
     # Get the reply prompt
     reply_prompt = json_data['prompt']
     # If the tweet_ID is passed in

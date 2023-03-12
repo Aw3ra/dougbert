@@ -13,7 +13,7 @@ bot_twitter_handle = 'DougbertAI'
 # Scrape frequency in hours
 scrape_frequency = 1
 # Reply frequency in minutes
-reply_frequency = 1
+reply_frequency = 10
 # Post times
 post_times = ['04:00', '08:00','12:00', '16:00', '20:00','00:00']
 

@@ -25,8 +25,15 @@ access_token=os.getenv('DOUGBERT_ACCESS_TOKEN') , access_token_secret=os.getenv(
 fall_back_client = tweepy.Client(MY_BEARER_TOKEN)
 
 # ---------------------------------------------------------------------------------#
-# streamingClient = tweepy.StreamingClient(MY_BEARER_TOKEN)
-# streamingClient.sample()
+# Class to handle the stream
+# Inputs:   tweepy.StreamingClient - the class to inherit from
+# Outputs:  None
+# Methods:  on_connect - function to do something on stream connect
+#           on_disconnect - function to do something on stream disconnect
+#           on_error - function to do something on stream error
+#           add_written_rules - function to add rules to the stream from a json file
+#           delete_written_rules - function to delete rules from the stream from a json file
+#           on_tweet - function to do something on a tweet
 # ---------------------------------------------------------------------------------#
 class DBStreaming(tweepy.StreamingClient):
     # -----------------------------------------------------------------------------#
@@ -37,7 +44,6 @@ class DBStreaming(tweepy.StreamingClient):
     def on_connect(self):
         print("Stream connected")
     # -----------------------------------------------------------------------------#
-
 
     # -----------------------------------------------------------------------------#
     # Function to do something on stream disconnect
@@ -51,7 +57,6 @@ class DBStreaming(tweepy.StreamingClient):
         print("Stream disconnected")
     # -----------------------------------------------------------------------------#
 
-
     # -----------------------------------------------------------------------------#
     # Function to do something on stream error
     # Input: status_code
@@ -64,7 +69,6 @@ class DBStreaming(tweepy.StreamingClient):
         return False
     # -----------------------------------------------------------------------------#
 
-
     # -----------------------------------------------------------------------------#
     # Function to add rules to the stream from a json file
     # Input: None
@@ -72,7 +76,7 @@ class DBStreaming(tweepy.StreamingClient):
     # -----------------------------------------------------------------------------#
     def add_written_rules(self):
         # Get rules from json file
-        rules = find_json.find_json_file('prompts.json')
+        rules = find_json.find_json_file('rules.json')
         # For each in rules
         for set in rules:
             for rule in set.keys():
@@ -81,7 +85,6 @@ class DBStreaming(tweepy.StreamingClient):
                 print(rule)
                 self.add_rules(rule)
     # -----------------------------------------------------------------------------#
-
 
     # -----------------------------------------------------------------------------#
     # Function to delete all rules from the stream
@@ -99,32 +102,29 @@ class DBStreaming(tweepy.StreamingClient):
             print("No rules to delete")
     # -----------------------------------------------------------------------------#
 
-    
     # -----------------------------------------------------------------------------#
-    # Function to trigger when a tweet matches the streaming rules
+    # Function to trigger when a tweet matches the streaming rules, check rules
     # Input: tweet
     # Output: None
     # -----------------------------------------------------------------------------#
     def on_tweet(self, tweet):
-        # Check the user tages against prompts.json
-        user_tags_rules = find_json.find_json_file('prompts.json')
-        # For each rule in user_tags_rules
-        for rule in user_tags_rules:
-            for user in rule.keys():
-                if tweet.entities['mentions'][0]['username'] == user: 
-                    if str(tweet.text[0:2]) != 'RT':
-                    # If the tweet has not been responded to
-                        if str(tweet.id) not in mongo_handler.decide_action('find', collection='responded_to', query={'Tweet_id': int(tweet.id)}):
-                            # Reply to the tweet
-                            print(twitter_handler.decide_action('reply_to_tweet', tweet_ID=str(tweet.id), rule=user))
-
-        # # If the tweet is not a retweet
-
+        # Get rules from the stream
+        rules = [r.value.lower() for r in self.get_rules().data]
+        # Check if the tweet matches any of the rules
+        matched_rules = [r for r in rules if r in tweet.text.lower()]
+        # If no rules match, return
+        if not matched_rules:
+            return
+        # If a rule matches, get the rule
+        rule = matched_rules[0]
+        # Check if the tweet is a retweet or has already been responded to
+        if not (tweet.text.startswith('RT')):
+            # If not, respond to the tweet
+            print(twitter_handler.decide_action('reply_to_tweet', tweet_ID=str(tweet.id), rule=rule))
+        else:
+            print("Tweet already responded to")
     # -----------------------------------------------------------------------------#
-
 # ---------------------------------------------------------------------------------#
-
-
 
 # ---------------------------------------------------------------------------------#
 # Function to start the twitter stream
